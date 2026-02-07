@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>❤️</title>
+<title>Vi</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Qwitcher+Grypen:wght@400;700&display=swap" rel="stylesheet">
 
@@ -83,7 +83,7 @@ button{
   transform:scale(1.15);
 }
 
-/* NO BUTTON — FIXED FROM START */
+/* NO BUTTON */
 #no{
   background:#f3c7d1;
   color:#6d0019;
@@ -122,7 +122,23 @@ button{
   to{transform:translateY(-10vh) rotate(45deg);opacity:0}
 }
 
-/* Petals */
+/* Falling petals */
+.falling-petal{
+  position:absolute;
+  width:14px;
+  height:20px;
+  background:#ffb6c9;
+  border-radius:50%;
+  animation:fall linear forwards;
+  opacity:0.9;
+}
+
+@keyframes fall{
+  from{transform:translateY(-10vh) rotate(0deg);}
+  to{transform:translateY(110vh) rotate(360deg);}
+}
+
+/* Petal trail */
 .petal{
   position:fixed;
   width:12px;
@@ -156,13 +172,15 @@ button{
 <body>
 
 <div id="screen1" class="screen">
-  <div class="text">Heyyy Vi!</div>
+  <div class="text">Hello Vi</div>
 </div>
 
 <div id="screen2" class="screen hidden">
   <div class="question-box">
     <div class="text">
-      Can I officially call you my Valentine?
+      Will you make me the happiest man<br>
+      this February 14th by being<br>
+      my Valentine?
     </div>
 
     <div class="options">
@@ -170,7 +188,6 @@ button{
     </div>
   </div>
 
-  <!-- No button is NOT inside flex -->
   <button id="no">☐ No</button>
 </div>
 
@@ -214,7 +231,7 @@ screen1.addEventListener("click",()=>{
   screen2.classList.remove("hidden");
 });
 
-/* PETAL TRAIL */
+/* Petal trail */
 function petalTrail(x,y){
   for(let i=0;i<6;i++){
     const p=document.createElement("div");
@@ -226,22 +243,20 @@ function petalTrail(x,y){
   }
 }
 
-/* NO BUTTON — GUARANTEED DART */
+/* Darting No */
 function moveNo(){
   const yesRect=yesBtn.getBoundingClientRect();
   const btnRect=noBtn.getBoundingClientRect();
-  let x,y,tries=0;
+  let x,y;
 
   do{
     x=Math.random()*(window.innerWidth-btnRect.width-20);
     y=Math.random()*(window.innerHeight-btnRect.height-20);
-    tries++;
   }while(
     x < yesRect.right+40 &&
     x + btnRect.width > yesRect.left-40 &&
     y < yesRect.bottom+40 &&
-    y + btnRect.height > yesRect.top-40 &&
-    tries < 100
+    y + btnRect.height > yesRect.top-40
   );
 
   petalTrail(noBtn.offsetLeft,noBtn.offsetTop);
@@ -253,6 +268,26 @@ noBtn.addEventListener("mouseenter",moveNo);
 noBtn.addEventListener("touchstart",moveNo);
 noBtn.addEventListener("click",moveNo);
 
+/* Falling petals from top */
+function createFallingPetal(){
+  const p=document.createElement("div");
+  p.className="falling-petal";
+  p.style.left=Math.random()*100+"vw";
+  p.style.animationDuration=5+Math.random()*4+"s";
+  document.body.appendChild(p);
+  setTimeout(()=>p.remove(),9000);
+}
+
+/* Hearts */
+function createHeart(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDuration=4+Math.random()*3+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),7000);
+}
+
 /* YES ACTION */
 yesBtn.addEventListener("click",()=>{
   screen2.innerHTML="";
@@ -262,16 +297,8 @@ yesBtn.addEventListener("click",()=>{
   screen2.appendChild(msg);
 
   setInterval(createHeart,250);
+  setInterval(createFallingPetal,350);
 });
-
-function createHeart(){
-  const h=document.createElement("div");
-  h.className="heart";
-  h.style.left=Math.random()*100+"vw";
-  h.style.animationDuration=4+Math.random()*3+"s";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),7000);
-}
 </script>
 
 </body>
